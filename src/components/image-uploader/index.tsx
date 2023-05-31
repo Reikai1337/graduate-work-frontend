@@ -1,14 +1,19 @@
 import React, { useState } from "react";
 import Dropzone, { FileRejection } from "react-dropzone";
 
-import { Box, Button, Typography } from "@mui/material";
+import { Box, FormHelperText, Typography } from "@mui/material";
 
 type ImageUploaderProps = {
-  onUpload: (file: File) => void;
+  onChange: (file: File) => void;
+  file: File | null;
+  helperText?: string;
 };
 
-export const ImageUploader: React.FC<ImageUploaderProps> = ({ onUpload }) => {
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+export const ImageUploader: React.FC<ImageUploaderProps> = ({
+  onChange,
+  file,
+  helperText,
+}) => {
   const [error, setError] = useState<string | null>(null);
 
   const handleDrop = (
@@ -17,20 +22,13 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onUpload }) => {
   ) => {
     if (rejectedFiles.length > 0) {
       setError("Invalid file format. Please select an image.");
-      setSelectedImage(null);
     } else if (acceptedFiles.length > 0) {
       setError(null);
-      setSelectedImage(acceptedFiles[0]);
+      onChange(acceptedFiles[0]);
     }
   };
 
-  const handleUpload = () => {
-    if (selectedImage) {
-      onUpload(selectedImage);
-      setSelectedImage(null);
-      setError(null);
-    }
-  };
+  const url = file ? URL.createObjectURL(file) : null;
 
   return (
     <Box>
@@ -39,20 +37,32 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onUpload }) => {
           <Box
             {...getRootProps()}
             style={{ border: "1px dashed gray", padding: "20px" }}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
             <input {...getInputProps()} />
-            {selectedImage ? (
-              <p>Selected image: {selectedImage.name}</p>
+            {url ? (
+              // eslint-disable-next-line jsx-a11y/img-redundant-alt
+              <img
+                src={url}
+                alt="Uploaded Image"
+                style={{ maxWidth: "100%", maxHeight: "200px" }}
+              />
             ) : (
-              <p>Drag and drop an image here, or click to select an image.</p>
+              <Typography>
+                Перетягніть зображення сюди або клацніть, щоб вибрати
+                зображення.
+              </Typography>
             )}
           </Box>
         )}
       </Dropzone>
-      {error && <Typography color="red">{error}</Typography>}
-      <Button onClick={handleUpload} disabled={!selectedImage}>
-        Upload Image
-      </Button>
+      {(error || helperText) && (
+        <FormHelperText>{error || helperText}</FormHelperText>
+      )}
     </Box>
   );
 };

@@ -9,7 +9,12 @@
 import { client } from "../../common";
 import { getRequestConfig } from "../helpers";
 import { UserResponse } from "../users/types";
-import { RegisterUserParams, RegisterUserResponse } from "./type";
+import {
+  LoginParams,
+  LoginResponse,
+  RegisterUserParams,
+  RegisterUserResponse
+} from "./type";
 
 export const AUTH_ULR = "/auth";
 
@@ -17,9 +22,10 @@ const LOGIN_URL = `${AUTH_ULR}/login`;
 const VERIFY_URL = `${AUTH_ULR}/verify`;
 const REGISTER_URL = `${AUTH_ULR}/register`;
 
-// export const login = (data: LoginParams) => {
-//   return client.post<LoginUserResponse>(LOGIN_URL, data);
-// };
+export const loginRequest = (data: LoginParams) => {
+  return client.post<LoginResponse>(LOGIN_URL, data);
+};
+
 export const verifyUser = () => {
   return client.post<UserResponse | undefined>(
     VERIFY_URL,

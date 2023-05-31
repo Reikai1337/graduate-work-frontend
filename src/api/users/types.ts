@@ -1,6 +1,7 @@
 import { RoleResponse } from "../roles/types";
 
 export type UserResponse = {
+  id: number;
   login: string;
   password: string;
   name: string;

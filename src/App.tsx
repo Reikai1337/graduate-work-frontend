@@ -1,27 +1,32 @@
 import { SnackbarProvider } from "notistack";
 import { FC } from "react";
+import { BrowserRouter } from "react-router-dom";
 
 import { Box } from "@mui/material";
 
-import { ImageUploader } from "./components/image-uploader";
+import { BasketContextProvider } from "./contexts/basket-context";
+import { UserContextProvider } from "./contexts/user-context";
+import { Pages } from "./pages";
 
 export type AppProps = {};
 
 export const App: FC<AppProps> = ({}) => {
   return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        width: "100wv",
-      }}
-    >
-      <SnackbarProvider maxSnack={3} preventDuplicate>
-        {/* <CreateUserForm /> */}
-        <ImageUploader onUpload={(file) => console.log({ file })} />
-      </SnackbarProvider>
-    </Box>
+    <BrowserRouter>
+      <UserContextProvider>
+        <SnackbarProvider maxSnack={3} autoHideDuration={2000}>
+          <BasketContextProvider>
+            <Box
+              sx={{
+                height: "100vh",
+                width: "100wv",
+              }}
+            >
+              <Pages />
+            </Box>
+          </BasketContextProvider>
+        </SnackbarProvider>
+      </UserContextProvider>
+    </BrowserRouter>
   );
 };

@@ -6,9 +6,14 @@ import * as yup from "yup";
 import { Button, Stack, TextField } from "@mui/material";
 
 import { registerUser } from "../../api/auth";
+import { RegisterUserResponse } from "../../api/auth/type";
 import { RolesSelect } from "../roles-select";
 
-export type RegisterUserFormProps = {};
+export type RegisterUserFormProps = {
+  withRoleSelect?: boolean;
+  hint?: string;
+  onSuccess?: (res: RegisterUserResponse) => void;
+};
 
 const validationSchema = yup.object({
   name: yup
@@ -44,7 +49,11 @@ const validationSchema = yup.object({
   role: yup.string().required("Required"),
 });
 
-export const CreateUserForm: FC<RegisterUserFormProps> = ({}) => {
+export const CreateUserForm: FC<RegisterUserFormProps> = ({
+  withRoleSelect = true,
+  hint = "Ласкаво просимо",
+  onSuccess,
+}) => {
   const { enqueueSnackbar } = useSnackbar();
   const formik = useFormik({
     initialValues: {
@@ -67,8 +76,8 @@ export const CreateUserForm: FC<RegisterUserFormProps> = ({}) => {
           email,
         });
         formik.resetForm();
-        console.log(res);
-        enqueueSnackbar("Ласкаво просимо", { variant: "success" });
+        enqueueSnackbar(hint, { variant: "success" });
+        onSuccess?.(res.data);
       } catch (error) {
         //@ts-ignore
         enqueueSnackbar(error.response.data.message, { variant: "error" });
@@ -86,9 +95,6 @@ export const CreateUserForm: FC<RegisterUserFormProps> = ({}) => {
       spacing={1}
       component="form"
       onSubmit={formik.handleSubmit}
-      sx={{
-        width: "500px",
-      }}
     >
       <TextField
         label="Ім'я"
@@ -166,20 +172,22 @@ export const CreateUserForm: FC<RegisterUserFormProps> = ({}) => {
         error={Boolean(formik.touched.email && formik.errors.email)}
         helperText={formik.touched.email && formik.errors.email}
       />
-      <RolesSelect
-        disabled={formik.isSubmitting}
-        value={formik.values.role}
-        onChange={(role) => formik.setFieldValue("role", role)}
-        error={Boolean(formik.touched.role && formik.errors.role)}
-        helperText={formik.touched.role && formik.errors.role}
-      />
+      {withRoleSelect && (
+        <RolesSelect
+          disabled={formik.isSubmitting}
+          value={formik.values.role}
+          onChange={(role) => formik.setFieldValue("role", role)}
+          error={Boolean(formik.touched.role && formik.errors.role)}
+          helperText={formik.touched.role && formik.errors.role}
+        />
+      )}
       <Button
         disabled={formik.isSubmitting}
         color="success"
         variant="contained"
         type="submit"
       >
-        Зареєструватися
+        Створити
       </Button>
     </Stack>
   );
