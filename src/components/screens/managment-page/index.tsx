@@ -10,7 +10,9 @@ import { Header } from "../../app-bar";
 import { CreateProductForm } from "../../create-product-form";
 import { CreateProductTypeForm } from "../../create-product-type-form";
 import { TabPanel } from "../../tab-panel";
+import { ContractsDataGrid } from "./contracts-data-grid";
 import { OrdersDataGrid } from "./orders-data-grid";
+import { StatisticsCharts } from "./statistics-charts";
 
 export type ManagementPageProps = {};
 export const ManagementPage: FC<ManagementPageProps> = ({}) => {
@@ -42,10 +44,13 @@ export const ManagementPage: FC<ManagementPageProps> = ({}) => {
         </Stack>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item 2
+        <StatisticsCharts />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <OrdersDataGrid />
+        <Stack spacing={1} width="100%">
+          <OrdersDataGrid />
+          <ContractsDataGrid />
+        </Stack>
       </TabPanel>
     </Box>
   );

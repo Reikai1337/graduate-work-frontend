@@ -22,3 +22,11 @@ export const updateOrderAccepted = (params: {
     getRequestConfig()
   );
 };
+
+export const getOrdersBetween = (params: { f: Date; s: Date }) => {
+  return client.post<OrderResponse[]>(
+    `${ORDER_URL}/between`,
+    params,
+    getRequestConfig()
+  );
+};

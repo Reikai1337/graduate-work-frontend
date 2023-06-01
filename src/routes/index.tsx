@@ -2,6 +2,7 @@ import { FC } from "react";
 
 import { AdminPage } from "../components/screens/admin-page";
 import { ShoppingPage } from "../components/screens/bas";
+import { ContractsPage } from "../components/screens/contracts-page";
 import { HomePage } from "../components/screens/home-page";
 import { ProductsPage } from "../components/screens/layouts";
 import { LoginPage } from "../components/screens/login-page";
@@ -10,6 +11,7 @@ import { OfferPage } from "../components/screens/offer-page";
 import { RegisterPage } from "../components/screens/register-page";
 import {
   ADMIN_PAGE_ROUTE,
+  CONTRACTS_PAGE_ROUTE,
   HOME_PAGE_ROUTE,
   lOGIN_PAGE_ROUTE,
   MANAGEMENT_PAGE_ROUTE,
@@ -28,6 +30,7 @@ export enum PAGES {
   AdminPage = "AdminPage",
   ShoppingPage = "ShoppingPage",
   OfferPage = "OfferPage",
+  ContractsPage = "ContractsPage",
 }
 
 type Route = {
@@ -95,6 +98,13 @@ export const routes: Route[] = [
     exact: true,
     Component: OfferPage,
     icon: "offer-page",
+  },
+  {
+    name: PAGES.ContractsPage,
+    path: CONTRACTS_PAGE_ROUTE,
+    exact: true,
+    Component: ContractsPage,
+    icon: "contracts-page",
   },
 ];
 

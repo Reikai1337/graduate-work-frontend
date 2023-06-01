@@ -25,6 +25,7 @@ import { useUserContext } from "../../contexts/user-context";
 import { useIsMobile } from "../../hooks/isMbile";
 import {
   ADMIN_PAGE_ROUTE,
+  CONTRACTS_PAGE_ROUTE,
   HOME_PAGE_ROUTE,
   lOGIN_PAGE_ROUTE,
   MANAGEMENT_PAGE_ROUTE,
@@ -48,8 +49,10 @@ export const Header: FC<HeaderProps> = ({}) => {
     if (!user) return { pages };
 
     if (user.roles.find((r) => r.value === "Manager")) pages.push("Управління");
-    if (user.roles.find((r) => r.value === "User"))
+    if (user.roles.find((r) => r.value === "User")) {
       pages.push("Запропонувати сировину");
+      pages.push("Контракти");
+    }
     if (user.roles.find((r) => r.value === "Admin")) {
       pages.push("Адміністрування");
       pages.push("Управління");
@@ -97,6 +100,14 @@ export const Header: FC<HeaderProps> = ({}) => {
 
       case "ЗАПРОПОНУВАТИ СИРОВИНУ":
         navigate(OFFER_PAGE_ROUTE);
+        break;
+
+      case "КОНТРАКТИ":
+        navigate(CONTRACTS_PAGE_ROUTE);
+        break;
+
+      case "Контракти":
+        navigate(CONTRACTS_PAGE_ROUTE);
         break;
 
       default:

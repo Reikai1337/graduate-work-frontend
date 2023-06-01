@@ -5,4 +5,5 @@ export const MANAGEMENT_PAGE_ROUTE = "/manage";
 export const ADMIN_PAGE_ROUTE = "/admin";
 export const SHOPPING_PAGE_ROUTE = "/shopping";
 export const OFFER_PAGE_ROUTE = "/offer";
+export const CONTRACTS_PAGE_ROUTE = "/contracts";
 export const HOME_PAGE_ROUTE = "/";
