@@ -28,6 +28,7 @@ export type OrderResponse = {
   lastName: string;
   phone: string;
   accepted: boolean;
+  rejected: boolean;
   address: string;
   totalPrice: number;
   created_at: string;

@@ -12,12 +12,13 @@ export const getActiveOrders = () => {
   return client.get<OrderResponse[]>(`${ORDER_URL}/active`, getRequestConfig());
 };
 
-export const updateOrderAccepted = (params: {
+export const updateOrderStatus = (params: {
+  status: "accepted" | "rejected";
   value: boolean;
   orderId: number;
 }) => {
   return client.post<OrderResponse>(
-    `${ORDER_URL}/accepted`,
+    `${ORDER_URL}/${params.status}`,
     params,
     getRequestConfig()
   );

@@ -3,7 +3,14 @@ import { FC, useState } from "react";
 import InputMask from "react-input-mask";
 import { useNavigate } from "react-router-dom";
 
-import { Box, Button, Paper, Stack, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Paper,
+  Stack,
+  TextField,
+  Typography
+} from "@mui/material";
 
 import { createOrder } from "../../../api/order";
 import { CreateOrderParams } from "../../../api/order/types";
@@ -12,6 +19,7 @@ import { useIsMobile } from "../../../hooks/isMbile";
 import { PRODUCT_PAGE_ROUTE } from "../../../routes/dictionary";
 import { getProductPrice } from "../../../utils/product";
 import { Header } from "../../app-bar";
+import { NovaPoshtaAddressInput } from "../../nova-poshta-address-input";
 import { ProductOrderTable } from "./product-table";
 
 export type ShoppingPageProps = {};
@@ -83,6 +91,7 @@ export const ShoppingPage: FC<ShoppingPageProps> = ({}) => {
             overflow: "auto",
           }}
         >
+          <Typography variant="h4">Продукти у кошику</Typography>
           <ProductOrderTable />
           {Boolean(basketState.length) && (
             <Paper
@@ -103,29 +112,31 @@ export const ShoppingPage: FC<ShoppingPageProps> = ({}) => {
                     size="small"
                   />
                 </Stack>
-                <Stack spacing={1} direction="row">
-                  <TextField
-                    onChange={(e) => handleChange("address", e.target.value)}
-                    value={state.address}
-                    label="Адреса"
-                    size="small"
-                  />
-                  <InputMask
-                    mask="+380-999-999-999"
-                    value={state.phone}
-                    onChange={(e) => handleChange("phone", e.target.value)}
-                  >
-                    {/* @ts-ignore */}
-                    {(inputProps) => (
-                      <TextField
-                        {...inputProps}
-                        label="Мобільний номер"
-                        // type="tel"
-                        size="small"
-                      />
-                    )}
-                  </InputMask>
-                </Stack>
+
+                <InputMask
+                  mask="+380-999-999-999"
+                  value={state.phone}
+                  onChange={(e) => handleChange("phone", e.target.value)}
+                >
+                  {/* @ts-ignore */}
+                  {(inputProps) => (
+                    <TextField
+                      {...inputProps}
+                      label="Мобільний номер"
+                      // type="tel"
+                      size="small"
+                    />
+                  )}
+                </InputMask>
+
+                <NovaPoshtaAddressInput
+                  onChange={({ address, city }) => {
+                    handleChange(
+                      "address",
+                      address && city ? `${city} ${address}` : ""
+                    );
+                  }}
+                />
 
                 <Button
                   disabled={

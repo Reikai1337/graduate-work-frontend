@@ -4,8 +4,6 @@ import {
   BarChart,
   CartesianGrid,
   Legend,
-  Line,
-  LineChart,
   Pie,
   PieChart,
   Tooltip,
@@ -13,10 +11,12 @@ import {
   YAxis
 } from "recharts";
 
-import { Stack, Typography } from "@mui/material";
+import { Divider, Stack, Typography } from "@mui/material";
 
 import { OrderResponse } from "../../../api/order/types";
 import { useIsMobile } from "../../../hooks/isMbile";
+import { generateColors } from "../../../utils/colors";
+import { TextChart } from "./product-ctarts";
 
 type OrdersChartsProps = {
   orders: OrderResponse[];
@@ -33,9 +33,11 @@ export const OrdersCharts: FC<OrdersChartsProps> = ({ orders }) => {
   }, [isMobile]);
 
   const getTotalPriceByCustomer = () => {
-    const data = orders.map((order) => ({
+    const colors = generateColors(orders.length);
+    const data = orders.map((order, i) => ({
       name: `${order.name} ${order.lastName}`,
-      totalPrice: order.totalPrice,
+      "Сумма замовлення": order.totalPrice,
+      fill: colors[i],
     }));
     return (
       <BarChart width={width} height={height} data={data}>
@@ -44,13 +46,65 @@ export const OrdersCharts: FC<OrdersChartsProps> = ({ orders }) => {
         <YAxis />
         <Tooltip />
         <Legend />
-        <Bar dataKey="totalPrice" fill="#8884d8" />
+        <Bar dataKey="Сумма замовлення" fill="#81c784" />
+      </BarChart>
+    );
+  };
+
+  const topProductCharts = () => {
+    const products = {};
+
+    orders.forEach((order) => {
+      order.productOrders.forEach((productOrder) => {
+        const { product } = productOrder;
+        const { id, name } = product;
+        //@ts-ignore
+        if (products[id]) {
+          //@ts-ignore
+          products[id].count += productOrder.count;
+        } else {
+          //@ts-ignore
+          products[id] = {
+            id,
+            name,
+            count: productOrder.count,
+            type: productOrder.product.type.name,
+          };
+        }
+      });
+    });
+
+    // Сортування продуктів за кількістю замовлень
+    const sortedProducts = Object.values(products).sort(
+      //@ts-ignore
+      (a, b) => b.count - a.count
+    );
+
+    const colors = generateColors(Object.keys(sortedProducts).length);
+
+    // Побудова даних для графіка
+    const chartData = sortedProducts.map((product, i) => ({
+      //@ts-ignore
+      name: product.name, //@ts-ignore
+      Замовлення: product.count,
+      fill: colors[i],
+    }));
+
+    return (
+      <BarChart width={width} height={height} data={chartData}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Bar dataKey="Замовлення" fill="#8884d8" />
       </BarChart>
     );
   };
 
   const getProductTypeDistribution = () => {
     const productTypes = {};
+
     orders.forEach((order) => {
       order.productOrders.forEach((productOrder) => {
         const type = productOrder.product.type.name;
@@ -65,10 +119,13 @@ export const OrdersCharts: FC<OrdersChartsProps> = ({ orders }) => {
       });
     });
 
-    const data = Object.keys(productTypes).map((type) => ({
+    const colors = generateColors(Object.keys(productTypes).length);
+
+    const data = Object.keys(productTypes).map((type, i) => ({
       name: type,
       //@ts-ignore
       value: productTypes[type],
+      fill: colors[i],
     }));
 
     return (
@@ -89,107 +146,31 @@ export const OrdersCharts: FC<OrdersChartsProps> = ({ orders }) => {
     );
   };
 
-  const getOrderCountByDate = () => {
-    const orderCountByDate = {};
-    orders.forEach((order) => {
-      const date = order.created_at.split("T")[0];
-      //@ts-ignore
-      if (orderCountByDate[date]) {
-        //@ts-ignore
-        orderCountByDate[date] += 1;
-      } else {
-        //@ts-ignore
-        orderCountByDate[date] = 1;
-      }
-    });
-
-    const data = Object.keys(orderCountByDate).map((date) => ({
-      date,
-      //@ts-ignore
-      acceptedOrders: orderCountByDate[date],
-      //@ts-ignore
-      rejectedOrders: orders.length - orderCountByDate[date],
-    }));
-
-    return (
-      <LineChart width={width} height={height} data={data}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Line type="monotone" dataKey="acceptedOrders" stroke="#8884d8" />
-        <Line type="monotone" dataKey="rejectedOrders" stroke="#82ca9d" />
-      </LineChart>
-    );
-  };
-
-  const getProductPriceDistribution = () => {
-    //@ts-ignore
-    const productPrices = [];
-    orders.forEach((order) => {
-      order.productOrders.forEach((productOrder) => {
-        const price = productOrder.product.price;
-        productPrices.push(price);
-      });
-    });
-
-    const data = [
-      { range: "0-10", count: 0 }, //0
-      { range: "10-20", count: 0 }, //1
-      { range: "20-40", count: 0 }, //2
-      { range: "40-80", count: 0 }, //3
-      { range: "80-160", count: 0 }, //4
-      { range: "160-320+", count: 0 }, //5
-    ];
-    //@ts-ignore
-    productPrices.forEach((price) => {
-      if (price >= 0 && price < 10) {
-        data[0].count += 1;
-      } else if (price >= 10 && price < 20) {
-        data[1].count += 1;
-      } else if (price >= 20 && price < 40) {
-        data[2].count += 1;
-      } else if (price >= 40 && price < 80) {
-        data[3].count += 1;
-      } else if (price >= 80 && price < 160) {
-        data[4].count += 1;
-      } else {
-        data[5].count += 1;
-      }
-    });
-
-    return (
-      <BarChart width={width} height={height} data={data}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="range" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="count" fill="#8884d8" />
-      </BarChart>
-    );
-  };
-
   return (
     <Stack spacing={1} alignItems="center">
-      <Typography align="center">
+      <Typography align="center" variant="h4">
         Графік стовпців: загальна сума замовлень для кожного клієнта
       </Typography>
       {getTotalPriceByCustomer()}
-
-      <Typography align="center">
+      <Divider sx={{ width: "100%" }} />
+      <Typography align="center" variant="h4">
         Кругова діаграма: відсоткове співвідношення продуктів за типами сиру
       </Typography>
       {getProductTypeDistribution()}
+      <Divider sx={{ width: "100%" }} />
 
-      <Typography align="center">
-        Лінійний графік: динаміка кількості замовлень за датами
+      <Divider sx={{ width: "100%" }} />
+      <Typography align="center" variant="h4">
+        Найпопулярніші продукти
       </Typography>
-      {getOrderCountByDate()}
+      {topProductCharts()}
+      <Divider sx={{ width: "100%" }} />
+      <Typography align="center" variant="h4">
+        Продукти які потребують аналізу
+      </Typography>
+      <TextChart />
 
-      <Typography align="center">Графік розподілу цін продуктів</Typography>
-      {getProductPriceDistribution()}
+      <Divider sx={{ width: "100%" }} />
     </Stack>
   );
 };

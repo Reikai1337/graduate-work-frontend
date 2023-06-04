@@ -236,7 +236,7 @@ export const Header: FC<HeaderProps> = ({}) => {
               >
                 {!isMobile && (
                   <Typography>
-                    {user.name} ({user.roles[0].value})
+                    {user.name} {user.lastName}
                   </Typography>
                 )}
                 <Tooltip title="Open settings">

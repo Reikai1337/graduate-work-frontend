@@ -3,7 +3,7 @@ import { FC, useState } from "react";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import RequestPageIcon from "@mui/icons-material/RequestPage";
-import { Box, Divider, Stack, Tab, Tabs } from "@mui/material";
+import { Box, Divider, Stack, Tab, Tabs, Typography } from "@mui/material";
 
 import { useIsMobile } from "../../../hooks/isMbile";
 import { Header } from "../../app-bar";
@@ -27,10 +27,16 @@ export const ManagementPage: FC<ManagementPageProps> = ({}) => {
     <Box>
       <Header />
       <Box sx={{ width: "100%", bgcolor: "background.secondary" }}>
-        <Tabs centered value={value} onChange={handleChange}>
-          <Tab icon={<AddBoxIcon />} label="Створити продукт" />
+        <Tabs
+          centered
+          value={value}
+          onChange={handleChange}
+          variant={isMobile ? "scrollable" : "fullWidth"}
+          scrollButtons={isMobile ? "auto" : undefined}
+        >
+          <Tab icon={<AddBoxIcon />} label="Створення" />
           <Tab icon={<QueryStatsIcon />} label="Статистика" />
-          <Tab icon={<RequestPageIcon />} label="Замовлення" />
+          <Tab icon={<RequestPageIcon />} label="Замовлення та пропозиції" />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -48,8 +54,20 @@ export const ManagementPage: FC<ManagementPageProps> = ({}) => {
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Stack spacing={1} width="100%">
-          <OrdersDataGrid />
-          <ContractsDataGrid />
+          <Stack spacing={1}>
+            <Stack spacing={1}>
+              <Typography align="center" variant="h4">
+                Замовлення продукції
+              </Typography>
+              <OrdersDataGrid />
+            </Stack>
+            <Stack spacing={1}>
+              <Typography align="center" variant="h4">
+                Пропозиції сировини
+              </Typography>
+              <ContractsDataGrid />
+            </Stack>
+          </Stack>
         </Stack>
       </TabPanel>
     </Box>

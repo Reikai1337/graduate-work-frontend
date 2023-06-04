@@ -39,7 +39,6 @@ export const OfferPage: FC<OfferPageProps> = ({}) => {
         price: Number(state.price),
         userId: user.id,
       });
-      console.log(res);
       enqueueSnackbar("Контракт відправлено на обробку", {
         variant: "success",
       });

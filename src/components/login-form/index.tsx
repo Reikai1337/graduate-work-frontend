@@ -30,8 +30,6 @@ export const LoginForm: FC<LoginFormProps> = ({}) => {
     },
     onSubmit: async ({ login, password }) => {
       try {
-        console.log({ login, password });
-
         const res = await loginRequest({ login, password });
         localStorage.setItem(AUTH_TOKEN_KEY, res.data.token);
         setUserData(res.data.user);
@@ -40,9 +38,6 @@ export const LoginForm: FC<LoginFormProps> = ({}) => {
       } catch (error) {
         //@ts-ignore
         enqueueSnackbar("Невірний логін або пароль", { variant: "error" });
-        console.log("error");
-
-        // enqueueSnackbar()
       }
     },
     validationSchema,

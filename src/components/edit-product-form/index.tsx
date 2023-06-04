@@ -28,6 +28,7 @@ const validationSchema = yup.object({
   barcode: yup.string().required("Штрих-код обовязковий"),
   boxSize: yup.string().required("Розмір ящика обовязковий"),
   package: yup.string().required("Упаковка обовязкова"),
+  availableQuantity: yup.number().required("Кількість обовязкова"),
   // image: yup.string().required("Фото обовязково"),
   quantityPerBox: yup.number().required("Кількість у ящику обовязково"),
   storageConditions: yup
@@ -63,6 +64,7 @@ export const EditProductForm: FC<EditProductFormProps> = ({
       package: product.package,
       quantityPerBox: product.quantityPerBox,
       storageConditions: product.storageConditions,
+      availableQuantity: product.availableQuantity,
     },
     onSubmit: async ({
       description,
@@ -78,6 +80,7 @@ export const EditProductForm: FC<EditProductFormProps> = ({
       package: productPackage,
       quantityPerBox,
       storageConditions,
+      availableQuantity,
     }) => {
       try {
         const imageRes = await uploadImage(image);
@@ -95,6 +98,7 @@ export const EditProductForm: FC<EditProductFormProps> = ({
           package: productPackage,
           quantityPerBox,
           storageConditions,
+          availableQuantity,
         });
         enqueueSnackbar(`Продукт ${name} оновлено`, {
           variant: "success",
@@ -212,6 +216,22 @@ export const EditProductForm: FC<EditProductFormProps> = ({
           onChange={formik.handleChange}
           error={Boolean(formik.touched.weightType && formik.errors.weightType)}
           helperText={formik.touched.weightType && formik.errors.weightType}
+        />
+        <TextField
+          fullWidth
+          label="Доступна кількість"
+          name="availableQuantity"
+          variant="outlined"
+          size="small"
+          disabled={formik.isSubmitting}
+          value={formik.values.availableQuantity}
+          onChange={formik.handleChange}
+          error={Boolean(
+            formik.touched.availableQuantity && formik.errors.availableQuantity
+          )}
+          helperText={
+            formik.touched.availableQuantity && formik.errors.availableQuantity
+          }
         />
       </Stack>
 

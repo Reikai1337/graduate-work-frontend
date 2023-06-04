@@ -19,6 +19,7 @@ export type ProductResponse = {
   package: string;
   barcode: string;
   boxSize: string;
+  availableQuantity: number;
   storageConditions: string;
   quantityPerBox: number;
   reviews: ReviewResponse[];
@@ -38,6 +39,7 @@ export type CreateProductParams = {
   boxSize: string;
   storageConditions: string;
   quantityPerBox: number;
+  availableQuantity: number;
 };
 
 export type UpdateProductParams = {
@@ -54,4 +56,5 @@ export type UpdateProductParams = {
   boxSize: string;
   storageConditions: string;
   quantityPerBox: number;
+  availableQuantity: number;
 };

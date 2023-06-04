@@ -7,12 +7,21 @@ import {
   IconButton,
   LinearProgress,
   Modal,
-  Paper
+  Paper,
+  Stack,
+  Typography
 } from "@mui/material";
-import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GridRowsProp,
+  GridValueFormatterParams
+} from "@mui/x-data-grid";
 
-import { getActiveOrders, updateOrderAccepted } from "../../../api/order";
+import { getActiveOrders, updateOrderStatus } from "../../../api/order";
 import { OrderResponse, ProductOrderResponse } from "../../../api/order/types";
+import { DATA_GRID_LOCALE_TEXT } from "../../../constants";
+import { formatDateToUkrainian } from "../../../utils/date";
 
 export type OrdersDataGridProps = {};
 
@@ -30,6 +39,7 @@ type OuterRow = {
   address: string;
   date: string;
   accepted: boolean;
+  rejected: boolean;
   productOrders: ProductOrderResponse[];
 };
 
@@ -54,10 +64,12 @@ type ProductOrderRow = Omit<ProductOrderResponse, "created_at" | "updated_at">;
 
 export type OpenProductOrdersButtonProps = {
   productOrders: ProductOrderResponse[];
+  orderId: number;
 };
 
 export const OpenProductOrdersButton: FC<OpenProductOrdersButtonProps> = ({
   productOrders,
+  orderId,
 }) => {
   const [open, setOpen] = useState(false);
   const { columns, rows } = useMemo<{
@@ -78,12 +90,25 @@ export const OpenProductOrdersButton: FC<OpenProductOrdersButtonProps> = ({
           align: "center",
           headerAlign: "center",
           headerName: "Кількість",
+          flex: 1,
+          valueFormatter: (params: GridValueFormatterParams<number>) => {
+            if (params.value == null) {
+              return "0 шт";
+            }
+            return `${params.value.toLocaleString()} шт`;
+          },
         },
         {
           field: "price",
           align: "center",
           headerAlign: "center",
           headerName: "Загалом",
+          valueFormatter: (params: GridValueFormatterParams<number>) => {
+            if (params.value == null) {
+              return "0 грн";
+            }
+            return `${params.value.toLocaleString()} грн`;
+          },
         },
       ],
       rows: productOrders.map<ProductOrderRow>((order) => ({
@@ -113,20 +138,31 @@ export const OpenProductOrdersButton: FC<OpenProductOrdersButtonProps> = ({
         sx={{
           display: "grid",
           placeItems: "center",
-          maxWidth: "100%",
-          overflow: "auto",
+          justifyContent: "center",
           padding: 1,
         }}
       >
-        <Paper sx={{ height: 400, maxWidth: "100%" }}>
-          <DataGrid<ProductOrderRow>
-            onCellClick={(params, e) => {
-              e.stopPropagation();
-            }}
-            columns={columns}
-            rows={rows}
-            rowHeight={30}
-          />
+        <Paper
+          sx={{
+            maxWidth: "calc(100vw - 16px)",
+          }}
+        >
+          <Stack spacing={1}>
+            <Typography variant="h5" align="center">
+              {`Деталі замовлення №${orderId}`}
+            </Typography>
+            <Box sx={{ height: 400, maxWidth: "100%" }}>
+              <DataGrid<ProductOrderRow>
+                onCellClick={(params, e) => {
+                  e.stopPropagation();
+                }}
+                columns={columns}
+                rows={rows}
+                rowHeight={30}
+                localeText={DATA_GRID_LOCALE_TEXT}
+              />
+            </Box>
+          </Stack>
         </Paper>
       </Modal>
     </Box>
@@ -150,17 +186,17 @@ export const OrdersDataGridInner: FC<OrdersDataGridInnerProps> = ({
         {
           field: "date",
           headerName: "Дата",
-          width: 300,
+          width: 220,
         },
         {
           field: "recipient",
           headerName: "Отримувач",
-          width: 300,
+          width: 200,
         },
         {
           field: "address",
           headerName: "Адреса",
-          width: 150,
+          width: 350,
         },
         {
           field: "phone",
@@ -172,13 +208,19 @@ export const OrdersDataGridInner: FC<OrdersDataGridInnerProps> = ({
         {
           field: "total",
           headerName: "Загалом",
-          headerAlign: "center",
-          align: "center",
+          headerAlign: "right",
+          align: "right",
           width: 150,
+          valueFormatter: (params: GridValueFormatterParams<number>) => {
+            if (params.value == null) {
+              return "0 грн";
+            }
+            return `${params.value.toLocaleString()} грн`;
+          },
         },
         {
           field: "accepted",
-          headerName: "Перевірений",
+          headerName: "Прийнято",
           headerAlign: "center",
           width: 150,
           align: "center",
@@ -187,9 +229,38 @@ export const OrdersDataGridInner: FC<OrdersDataGridInnerProps> = ({
               checked={params.row.accepted}
               onChange={async (value: boolean) => {
                 try {
-                  await updateOrderAccepted({ value, orderId: params.row.id });
+                  await updateOrderStatus({
+                    status: "accepted",
+                    value,
+                    orderId: params.row.id,
+                  });
                   params.api.updateRows([
-                    { id: params.row.id, accepted: value },
+                    { id: params.row.id, accepted: value, rejected: !value },
+                  ]);
+                } catch (error) {}
+              }}
+              orderId={params.row.orderNumber}
+            />
+          ),
+        },
+        {
+          field: "rejected",
+          headerName: "Відхилено",
+          headerAlign: "center",
+          width: 150,
+          align: "center",
+          renderCell: (params) => (
+            <AcceptOrderCheckBox
+              checked={params.row.rejected}
+              onChange={async (value: boolean) => {
+                try {
+                  await updateOrderStatus({
+                    status: "rejected",
+                    value,
+                    orderId: params.row.id,
+                  });
+                  params.api.updateRows([
+                    { id: params.row.id, rejected: value, accepted: !value },
                   ]);
                 } catch (error) {}
               }}
@@ -205,7 +276,10 @@ export const OrdersDataGridInner: FC<OrdersDataGridInnerProps> = ({
           flex: 1,
           headerAlign: "center",
           renderCell: (params) => (
-            <OpenProductOrdersButton productOrders={params.row.productOrders} />
+            <OpenProductOrdersButton
+              productOrders={params.row.productOrders}
+              orderId={params.row.id}
+            />
           ),
         },
       ],
@@ -216,8 +290,9 @@ export const OrdersDataGridInner: FC<OrdersDataGridInnerProps> = ({
         total: order.totalPrice,
         phone: order.phone,
         address: order.address,
-        date: order.created_at,
+        date: formatDateToUkrainian(order.created_at, true),
         accepted: order.accepted,
+        rejected: order.rejected,
         productOrders: order.productOrders,
       })),
     };
@@ -234,6 +309,7 @@ export const OrdersDataGridInner: FC<OrdersDataGridInnerProps> = ({
         slots={{
           loadingOverlay: LinearProgress,
         }}
+        localeText={DATA_GRID_LOCALE_TEXT}
       />
     </div>
   );

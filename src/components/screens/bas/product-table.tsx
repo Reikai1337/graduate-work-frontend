@@ -101,6 +101,7 @@ export const ProductOrderTable: FC<ProductOrderTableProps> = ({}) => {
                         </Button>
                         <Button>{count}</Button>
                         <Button
+                          disabled={product.availableQuantity === count}
                           onClick={() => {
                             countChange(product.id, count + 1);
                           }}

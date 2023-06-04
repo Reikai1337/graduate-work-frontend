@@ -51,6 +51,7 @@ export const CreateProductForm: FC<CreateProductFormProps> = ({}) => {
       package: "",
       quantityPerBox: 0,
       storageConditions: "",
+      availableQuantity: 0,
     },
     onSubmit: async ({
       description,
@@ -66,6 +67,7 @@ export const CreateProductForm: FC<CreateProductFormProps> = ({}) => {
       package: productPackage,
       quantityPerBox,
       storageConditions,
+      availableQuantity,
     }) => {
       try {
         const imageRes = await uploadImage(image);
@@ -84,9 +86,9 @@ export const CreateProductForm: FC<CreateProductFormProps> = ({}) => {
           package: productPackage,
           quantityPerBox,
           storageConditions,
+          availableQuantity,
         });
         formik.resetForm();
-        console.log(res);
         enqueueSnackbar(`Продукт ${name} було створено`, {
           variant: "success",
         });
@@ -198,6 +200,22 @@ export const CreateProductForm: FC<CreateProductFormProps> = ({}) => {
           onChange={formik.handleChange}
           error={Boolean(formik.touched.weightType && formik.errors.weightType)}
           helperText={formik.touched.weightType && formik.errors.weightType}
+        />
+        <TextField
+          fullWidth
+          label="Доступна кількість"
+          name="availableQuantity"
+          variant="outlined"
+          size="small"
+          disabled={formik.isSubmitting}
+          value={formik.values.availableQuantity}
+          onChange={formik.handleChange}
+          error={Boolean(
+            formik.touched.availableQuantity && formik.errors.availableQuantity
+          )}
+          helperText={
+            formik.touched.availableQuantity && formik.errors.availableQuantity
+          }
         />
       </Stack>
 

@@ -234,6 +234,7 @@ export const ProductList: FC<ProductListProps> = ({}) => {
               onClick={() => {
                 addToBasket(product);
               }}
+              disabled={product.availableQuantity === 0}
             >
               {isMobile ? (
                 <AddShoppingCartIcon fontSize="small" />

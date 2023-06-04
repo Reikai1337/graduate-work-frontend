@@ -44,3 +44,10 @@ export const patchContract = (
     getRequestConfig()
   );
 };
+
+export const deleteContract = (id: number) => {
+  return client.delete<ContractResponse>(
+    `${CONTRACT_URL}/${id}`,
+    getRequestConfig()
+  );
+};

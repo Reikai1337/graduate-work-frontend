@@ -5,6 +5,8 @@ import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
 
 import { getContracts, patchContract } from "../../../api/contract";
 import { ContractResponse } from "../../../api/contract/types";
+import { DATA_GRID_LOCALE_TEXT } from "../../../constants";
+import { formatDateToUkrainian } from "../../../utils/date";
 
 export type ContractsDataGridProps = {
   contracts: ContractResponse[];
@@ -53,7 +55,7 @@ const ContractsDataGridInner: FC<ContractsDataGridProps> = ({
         {
           field: "created_at",
           headerName: "Дата",
-          width: 300,
+          width: 220,
         },
         {
           field: "productName",
@@ -64,7 +66,7 @@ const ContractsDataGridInner: FC<ContractsDataGridProps> = ({
           field: "price",
           headerName: "Ціна",
           width: 150,
-          renderCell: ({ row }) => `${row.price} за ${row.count}`,
+          renderCell: ({ row }) => `${row.price} грн за ${row.count}`,
         },
         {
           field: "user",
@@ -81,7 +83,7 @@ const ContractsDataGridInner: FC<ContractsDataGridProps> = ({
 
         {
           field: "accepted",
-          headerName: "Узгоджено",
+          headerName: "Прийнято",
           headerAlign: "center",
           width: 150,
           align: "center",
@@ -132,7 +134,7 @@ const ContractsDataGridInner: FC<ContractsDataGridProps> = ({
           user,
           id,
         }) => ({
-          created_at,
+          created_at: formatDateToUkrainian(created_at, true),
           id,
           phone,
           price,
@@ -154,6 +156,7 @@ const ContractsDataGridInner: FC<ContractsDataGridProps> = ({
         rows={rows}
         rowHeight={30}
         disableRowSelectionOnClick
+        localeText={DATA_GRID_LOCALE_TEXT}
         slots={{
           loadingOverlay: LinearProgress,
         }}
