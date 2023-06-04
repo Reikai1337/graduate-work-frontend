@@ -1,9 +1,9 @@
 import { FC, MouseEvent, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import LoginIcon from "@mui/icons-material/Login";
 import MenuIcon from "@mui/icons-material/Menu";
+import AddShoppingCartIcon from "@mui/icons-material/ShoppingBasket";
 import YardIcon from "@mui/icons-material/Yard";
 import {
   AppBar,
@@ -21,6 +21,7 @@ import {
   Typography
 } from "@mui/material";
 
+import { useBasketContext } from "../../contexts/basket-context";
 import { useUserContext } from "../../contexts/user-context";
 import { useIsMobile } from "../../hooks/isMbile";
 import {
@@ -41,6 +42,7 @@ const settings = ["Кошик", "Вийти"];
 export const Header: FC<HeaderProps> = ({}) => {
   const isMobile = useIsMobile();
   const { user, setUserData } = useUserContext();
+  const { clearBasket } = useBasketContext();
   const navigate = useNavigate();
 
   const { pages } = useMemo(() => {
@@ -122,6 +124,7 @@ export const Header: FC<HeaderProps> = ({}) => {
       case "Вийти":
         navigate(lOGIN_PAGE_ROUTE);
         setUserData(undefined);
+        clearBasket();
         break;
       case "Кошик":
         navigate(SHOPPING_PAGE_ROUTE);
@@ -279,12 +282,20 @@ export const Header: FC<HeaderProps> = ({}) => {
               </Stack>
             </>
           ) : (
-            <IconButton
-              onClick={() => navigate(lOGIN_PAGE_ROUTE)}
-              color="inherit"
-            >
-              <LoginIcon />
-            </IconButton>
+            <Stack direction="row">
+              <IconButton
+                onClick={() => navigate(lOGIN_PAGE_ROUTE)}
+                color="inherit"
+              >
+                <LoginIcon />
+              </IconButton>
+              <IconButton
+                onClick={() => navigate(SHOPPING_PAGE_ROUTE)}
+                color="inherit"
+              >
+                <AddShoppingCartIcon fontSize="small" />
+              </IconButton>
+            </Stack>
           )}
         </Toolbar>
       </Container>

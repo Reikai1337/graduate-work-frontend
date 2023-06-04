@@ -15,6 +15,7 @@ import {
 import { createOrder } from "../../../api/order";
 import { CreateOrderParams } from "../../../api/order/types";
 import { useBasketContext } from "../../../contexts/basket-context";
+import { useUserContext } from "../../../contexts/user-context";
 import { useIsMobile } from "../../../hooks/isMbile";
 import { PRODUCT_PAGE_ROUTE } from "../../../routes/dictionary";
 import { getProductPrice } from "../../../utils/product";
@@ -25,6 +26,7 @@ import { ProductOrderTable } from "./product-table";
 export type ShoppingPageProps = {};
 
 export const ShoppingPage: FC<ShoppingPageProps> = ({}) => {
+  const { user } = useUserContext();
   const navigate = useNavigate();
   const { basketState, total, clearBasket } = useBasketContext();
   const { enqueueSnackbar } = useSnackbar();
@@ -34,8 +36,8 @@ export const ShoppingPage: FC<ShoppingPageProps> = ({}) => {
   const [state, setState] = useState({
     address: "",
     phone: "",
-    name: "",
-    lastName: "",
+    name: user?.name || "",
+    lastName: user?.lastName || "",
   });
 
   const handleChange = (field: keyof typeof state, value: string) => {
