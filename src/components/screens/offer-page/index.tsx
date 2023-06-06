@@ -16,7 +16,7 @@ export type OfferPageProps = {};
 
 export const OfferPage: FC<OfferPageProps> = ({}) => {
   const { user } = useUserContext();
-  const navogate = useNavigate();
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState({
@@ -42,7 +42,7 @@ export const OfferPage: FC<OfferPageProps> = ({}) => {
       enqueueSnackbar("Контракт відправлено на обробку", {
         variant: "success",
       });
-      navogate(CONTRACTS_PAGE_ROUTE);
+      navigate(CONTRACTS_PAGE_ROUTE);
     } catch (error) {}
     setLoading(false);
   };

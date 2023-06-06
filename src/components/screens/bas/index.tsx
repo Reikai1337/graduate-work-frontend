@@ -74,8 +74,7 @@ export const ShoppingPage: FC<ShoppingPageProps> = ({}) => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          backgroundImage:
-            "linear-gradient(to top, #c4c5c7 0%, #dcdddf 52%, #ebebeb 100%)",
+          backgroundColor: "#f1f2f4",
           overflow: "auto",
         }}
       >
@@ -125,7 +124,6 @@ export const ShoppingPage: FC<ShoppingPageProps> = ({}) => {
                     <TextField
                       {...inputProps}
                       label="Мобільний номер"
-                      // type="tel"
                       size="small"
                     />
                   )}

@@ -1,11 +1,3 @@
-// import {
-//   LoginParams,
-//   LoginUserResponse,
-//   RegisterUserParams,
-//   RegisterUserResponse,
-//   UserResponse,
-// } from "./types";
-
 import { client } from "../../common";
 import { getRequestConfig } from "../helpers";
 import { UserResponse } from "../users/types";
@@ -41,15 +33,3 @@ export const registerUser = (params: RegisterUserParams) => {
     getRequestConfig()
   );
 };
-
-// export const createInitialAdmin = () => {
-//   return client.post<RegisterUserResponse>(
-//     CREATE_INITIAL_ADMIN_URL,
-//     {},
-//     getRequestConfig()
-//   );
-// };
-
-// export const checkInitialAdmin = () => {
-//   return client.get<boolean>(CHECK_INITIAL_ADMIN_URL);
-// };

@@ -1,0 +1,52 @@
+.home-title {
+  max-width: 595.19px;
+
+  font-family: "GT Walsheim Pro";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 46px;
+  line-height: 56px;
+  /* or 122% */
+
+  background: linear-gradient(90.79deg, #0048ff 3.42%, #d6008d 82.66%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.home-description {
+  max-width: 583.91px;
+  font-family: "GT Walsheim Pro";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 36px;
+}
+
+.info-block {
+  width: 100%;
+  height: 400px;
+  padding: 25px;
+  background: #edf7ff;
+  border-radius: 500px;
+}
+
+.info {
+  width: 350px;
+  height: 100%;
+  background: #ffffff;
+  border-right: 3px solid #c4d4ff;
+  border-radius: 500px 0px 0px 500px;
+}
+
+@media (max-width: 767px) {
+  .home-title {
+    font-size: 23px;
+    line-height: 28px;
+  }
+
+  .home-description {
+    font-size: 10px;
+    line-height: 18px;
+  }
+}

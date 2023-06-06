@@ -19,29 +19,11 @@ export const UserContextProvider: FC<{ children: ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<UserResponse | undefined>(undefined);
 
-  const signIn = async (params: any, config: any) => {
-    // try {
-    //   const res = await baseLogin(params);
-    //   if (res.status === 201) {
-    //     setUser({ ...res.data.user });
-    //     localStorage.setItem(TOKEN_KEY, res.data.token);
-    //     config?.onSuccess?.(res.data.user);
-    //   }
-    // } catch (error) {
-    //   config?.onFailed?.();
-    // }
-  };
-
   const setUserData = (user: UserResponse | undefined) => {
     setUser(user);
     if (!user) {
       localStorage.removeItem(AUTH_TOKEN_KEY);
     }
-  };
-
-  const sighOut = () => {
-    // localStorage.removeItem(TOKEN_KEY);
-    // setUser(undefined);
   };
 
   const verifyUser = async () => {
@@ -55,11 +37,8 @@ export const UserContextProvider: FC<{ children: ReactNode }> = ({
   };
 
   const value = {
-    // signIn,
     user,
     setUserData,
-    // hasUser: Boolean(user),
-    // sighOut,
   };
 
   useLayoutEffect(() => {

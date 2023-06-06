@@ -1,4 +1,4 @@
-import { FC, forwardRef, useEffect, useMemo, useRef, useState } from "react";
+import { FC, forwardRef, useMemo, useRef, useState } from "react";
 
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import EditIcon from "@mui/icons-material/Edit";
@@ -20,7 +20,6 @@ import {
 } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 
-import { getProducts } from "../../api/product";
 import { ProductResponse } from "../../api/product/types";
 import { uploadReview } from "../../api/review";
 import { Role } from "../../api/roles/types";
@@ -53,13 +52,15 @@ const Transition = forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export type ProductListProps = {};
+export type ProductListProps = {
+  products: ProductResponse[];
+  onUpdate: (product: ProductResponse) => void;
+};
 
 const EDIT_ROLES: Role[] = ["Admin", "Manager"];
 
-export const ProductList: FC<ProductListProps> = ({}) => {
+export const ProductList: FC<ProductListProps> = ({ onUpdate, products }) => {
   const isMobile = useIsMobile();
-  const [products, setProducts] = useState<ProductResponse[]>([]);
   const [openDialog, setOpenDialog] = useState(false);
   const productToDialogRef = useRef<ProductResponse | null>(null);
   const [open, setOpen] = useState(false);
@@ -93,10 +94,6 @@ export const ProductList: FC<ProductListProps> = ({}) => {
     setOpenDialog(false);
   };
 
-  const handleSubmit = (product: ProductResponse) => {
-    setProducts((prev) => prev.map((p) => (p.id === product.id ? product : p)));
-  };
-
   const handleUploadReview = async (productId: number, rating: number) => {
     if (!user?.id) return;
 
@@ -106,14 +103,6 @@ export const ProductList: FC<ProductListProps> = ({}) => {
       userId: user.id,
     });
   };
-
-  useEffect(() => {
-    const fetch = async () => {
-      const res = await getProducts();
-      setProducts(res.data);
-    };
-    fetch();
-  }, []);
 
   return (
     <Box
@@ -248,7 +237,7 @@ export const ProductList: FC<ProductListProps> = ({}) => {
       <Modal open={open} onClose={handleClose}>
         <Paper sx={style}>
           <EditProductPopup
-            onSubmit={handleSubmit}
+            onSubmit={onUpdate}
             productId={productIdRef.current}
           />
         </Paper>

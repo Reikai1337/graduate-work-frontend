@@ -8,8 +8,7 @@ export const PageWrapper: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <Box
       sx={{
-        backgroundImage:
-          "linear-gradient(to top, #c4c5c7 0%, #dcdddf 52%, #ebebeb 100%)",
+        backgroundColor: "#f1f2f4",
       }}
     >
       {children}

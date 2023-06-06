@@ -24,7 +24,6 @@ const validationSchema = yup.object({
   barcode: yup.string().required("Штрих-код обовязковий"),
   boxSize: yup.string().required("Розмір ящика обовязковий"),
   package: yup.string().required("Упаковка обовязкова"),
-  // image: yup.string().required("Фото обовязково"),
   quantityPerBox: yup.number().required("Кількість у ящику обовязково"),
   storageConditions: yup
     .string()

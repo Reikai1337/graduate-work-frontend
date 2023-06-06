@@ -81,7 +81,6 @@ export const CreateUserForm: FC<RegisterUserFormProps> = ({
       } catch (error) {
         //@ts-ignore
         enqueueSnackbar(error.response.data.message, { variant: "error" });
-        // enqueueSnackbar()
       }
     },
     validationSchema,

@@ -26,6 +26,14 @@ export const getProduct = (id: number) => {
   );
 };
 
+export const getProductsByName = (name: string, productType: string) => {
+  return client.post<ProductResponse[]>(
+    `${PRODUCT_URL}/findByName`,
+    { name, productType },
+    getRequestConfig()
+  );
+};
+
 export const updateProduct = (id: number, data: UpdateProductParams) => {
   return client.patch<ProductResponse>(
     `${PRODUCT_URL}/${id}`,

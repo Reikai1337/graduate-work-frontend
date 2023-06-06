@@ -46,7 +46,6 @@ export const LoginForm: FC<LoginFormProps> = ({}) => {
   return (
     <Paper
       sx={{
-        // ewidth: "200px",
         padding: 1,
       }}
     >

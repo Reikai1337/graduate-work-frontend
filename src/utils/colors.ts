@@ -1,12 +1,12 @@
 export const generateColors = (count: number): string[] => {
   const colors: string[] = [];
 
-  const goldenRatioConjugate = 0.618033988749895; // Золотое сечение для разнообразия цветов
+  const goldenRatioConjugate = 0.618033988749895;
 
   for (let i = 0; i < count; i++) {
-    const hue = (i * goldenRatioConjugate) % 1; // Вычисляем оттенок цвета
+    const hue = (i * goldenRatioConjugate) % 1;
 
-    const color = hslToHex(hue, 0.5, 0.6); // Преобразуем HSL в HEX
+    const color = hslToHex(hue, 0.5, 0.6);
 
     colors.push(color);
   }
@@ -14,7 +14,6 @@ export const generateColors = (count: number): string[] => {
   return colors;
 };
 
-// Преобразование HSL в HEX
 function hslToHex(h: number, s: number, l: number): string {
   const hPrime = h * 6;
   const c = (1 - Math.abs(2 * l - 1)) * s;

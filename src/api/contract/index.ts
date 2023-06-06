@@ -4,13 +4,6 @@ import { CerateContractParams, ContractResponse } from "./types";
 
 export const CONTRACT_URL = "/contract";
 
-// export const getProducts = () => {
-//   return client.get<ProductResponse[]>(
-//     `${PRODUCT_URL}/all`,
-//     getRequestConfig()
-//   );
-// };
-
 export const createContract = (params: CerateContractParams) => {
   return client.post<ContractResponse>(
     CONTRACT_URL,

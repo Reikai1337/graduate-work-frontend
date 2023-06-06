@@ -14,16 +14,18 @@ import {
 import { getProductTypes } from "../../api/product-type";
 import { ProductTypeResponse } from "../../api/product-type/types";
 
-export type ProductTypeSelectProps = FormControlProps & {
+export type ProductTypeSelectProps = Omit<FormControlProps, "onChange"> & {
   onChange: (value: string) => void;
   value: string;
   helperText?: string | boolean;
+  withDefaultValue?: boolean;
 };
 
 export const ProductTypeSelect: FC<ProductTypeSelectProps> = ({
   onChange,
   value,
   helperText,
+  withDefaultValue = false,
   ...rest
 }) => {
   const [productTypes, setProductTypes] = useState<ProductTypeResponse[]>([]);
@@ -52,6 +54,11 @@ export const ProductTypeSelect: FC<ProductTypeSelectProps> = ({
       >
         <InputLabel>Тип продукта</InputLabel>
         <Select value={value} label="Тип продукта" onChange={handleChange}>
+          {withDefaultValue && (
+            <MenuItem key="default" value={"default"}>
+              Усі
+            </MenuItem>
+          )}
           {productTypes.map((pt) => (
             <MenuItem key={pt.id} value={pt.name}>
               {pt.name}
